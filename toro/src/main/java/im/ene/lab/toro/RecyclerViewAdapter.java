@@ -23,7 +23,7 @@ import android.view.View;
 /**
  * Created by eneim on 1/30/16.
  */
-public abstract class BaseAdapter<VH extends BaseAdapter.ViewHolder>
+public abstract class RecyclerViewAdapter<VH extends RecyclerViewAdapter.ViewHolder>
     extends RecyclerView.Adapter<VH> {
 
   protected OnItemClickListener mOnItemClickListener;

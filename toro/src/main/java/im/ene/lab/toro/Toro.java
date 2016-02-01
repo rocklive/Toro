@@ -29,6 +29,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.view.ViewParent;
+import im.ene.lab.toro.widget.ToroGridView;
 import im.ene.lab.toro.widget.ToroListView;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -158,10 +159,17 @@ import java.util.WeakHashMap;
         sInstance.mEntries.put(view, listener);
       }
     } else if (view instanceof ToroListView) {
-      // TODO implement for ListView
       synchronized (LOCK) {
-        AbsListViewScrollListener scrollListener = new AbsListViewScrollListener(new ToroManagerImpl());
+        AbsListViewScrollListener scrollListener =
+            new AbsListViewScrollListener(new ToroManagerImpl());
         ((ToroListView) view).addOnScrollListener(scrollListener);
+        sInstance.mEntries.put(view, scrollListener);
+      }
+    } else if (view instanceof ToroGridView) {
+      synchronized (LOCK) {
+        AbsListViewScrollListener scrollListener =
+            new AbsListViewScrollListener(new ToroManagerImpl());
+        ((ToroGridView) view).addOnScrollListener(scrollListener);
         sInstance.mEntries.put(view, scrollListener);
       }
     }
@@ -296,7 +304,7 @@ import java.util.WeakHashMap;
         // 1. Sort candidates by the order of player
         Collections.sort(candidates, new Comparator<ToroPlayer>() {
           @Override public int compare(ToroPlayer lhs, ToroPlayer rhs) {
-            return lhs.getPlayerPosition() - rhs.getPlayerPosition();
+            return lhs.getPositionInAdapter() - rhs.getPositionInAdapter();
           }
         });
 
@@ -363,7 +371,7 @@ import java.util.WeakHashMap;
         // 1. Sort candidates by the order of player
         Collections.sort(candidates, new Comparator<ToroPlayer>() {
           @Override public int compare(ToroPlayer lhs, ToroPlayer rhs) {
-            return lhs.getPlayerPosition() - rhs.getPlayerPosition();
+            return lhs.getPositionInAdapter() - rhs.getPositionInAdapter();
           }
         });
 

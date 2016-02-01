@@ -3,122 +3,47 @@ package im.ene.lab.toro.widget;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.CallSuper;
 import android.util.AttributeSet;
-import android.widget.AbsListView;
-
-import im.ene.lab.toro.AbsListViewScrollListener;
-
-import java.util.ArrayList;
+import android.widget.ListView;
 
 /**
  * Created by eneim on 1/31/16.
  * <p/>
  * A ListView, with fixed OnScrollListener
  */
-public abstract class ToroListView extends AbsListView {
+public class ToroListView extends ListView {
+
+  private final ListViewScrollHelper mHelper;
 
   public ToroListView(Context context) {
-    super(context);
+    this(context, null);
   }
 
   public ToroListView(Context context, AttributeSet attrs) {
-    super(context, attrs);
+    this(context, attrs, android.R.attr.listViewStyle);
   }
 
   public ToroListView(Context context, AttributeSet attrs, int defStyleAttr) {
-    super(context, attrs, defStyleAttr);
+    this(context, attrs, defStyleAttr, 0);
   }
 
   @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   public ToroListView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
+    mHelper = new ListViewScrollHelper(this);
   }
-
-  private ArrayList<OnScrollListener> mListeners;
-  private OnScrollListener mLegacyOnScrollListener;
 
   // Don't use this
-  @Deprecated
-  @Override public void setOnScrollListener(final OnScrollListener l) {
-    if (l == null) {
-      return;
-    }
-    mLegacyOnScrollListener = l;
-    // prevent NPE
-    if (mListeners == null) {
-      mListeners = new ArrayList<>();
-    }
-
-    super.setOnScrollListener(new OnScrollListener() {
-      @Override public void onScrollStateChanged(AbsListView view, int scrollState) {
-        l.onScrollStateChanged(view, scrollState);
-        for (OnScrollListener listener : mListeners) {
-          if (listener instanceof AbsListViewScrollListener) {
-            listener.onScrollStateChanged(view, scrollState);
-          }
-        }
-      }
-
-      @Override
-      public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
-                           int totalItemCount) {
-        l.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
-        for (OnScrollListener listener : mListeners) {
-          if (listener instanceof AbsListViewScrollListener) {
-            listener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
-          }
-        }
-      }
-    });
+  @CallSuper @Deprecated @Override public void setOnScrollListener(final OnScrollListener l) {
+    super.setOnScrollListener(l);
   }
 
-  public void addOnScrollListener(final OnScrollListener listener) {
-    if (mListeners == null) {
-      mListeners = new ArrayList<>();
-    }
-    mListeners.add(listener);
-
-    super.setOnScrollListener(new OnScrollListener() {
-      @Override public void onScrollStateChanged(AbsListView view, int scrollState) {
-        for (OnScrollListener item : mListeners) {
-          item.onScrollStateChanged(view, scrollState);
-        }
-      }
-
-      @Override
-      public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
-                           int totalItemCount) {
-        for (OnScrollListener item : mListeners) {
-          item.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
-        }
-      }
-    });
+  @CallSuper public void addOnScrollListener(final OnScrollListener listener) {
+    mHelper.addOnScrollListener(listener);
   }
 
   public void removeOnScrollListener(OnScrollListener listener) {
-    if (mLegacyOnScrollListener == listener) {
-      mLegacyOnScrollListener = null;
-    }
-
-    if (mListeners == null) {
-      return;
-    }
-    mListeners.remove(listener);
-    // Replace old listeners
-    super.setOnScrollListener(new OnScrollListener() {
-      @Override public void onScrollStateChanged(AbsListView view, int scrollState) {
-        for (OnScrollListener item : mListeners) {
-          item.onScrollStateChanged(view, scrollState);
-        }
-      }
-
-      @Override
-      public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
-                           int totalItemCount) {
-        for (OnScrollListener item : mListeners) {
-          item.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
-        }
-      }
-    });
+    mHelper.removeOnScrollListener(listener);
   }
 }

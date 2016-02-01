@@ -31,14 +31,14 @@ import java.util.List;
  */
 public final class RecyclerViewLinearScrollListener extends RecyclerViewScrollListener {
 
-  private int lastVideoPosition;
+  private int mLastVideoPosition;
 
   private Rect mParentRect;
   private Rect mChildRect;
 
   public RecyclerViewLinearScrollListener(@NonNull ToroManager manager) {
     super(manager);
-    lastVideoPosition = -1;
+    mLastVideoPosition = -1;
     mParentRect = new Rect();
     mChildRect = new Rect();
   }
@@ -56,9 +56,9 @@ public final class RecyclerViewLinearScrollListener extends RecyclerViewScrollLi
     // Check current playing position
     ToroPlayer lastVideo = mManager.getPlayer();
     if (lastVideo != null) {
-      lastVideoPosition = lastVideo.getPlayerPosition();
+      mLastVideoPosition = lastVideo.getPositionInAdapter();
       RecyclerView.ViewHolder viewHolder =
-          recyclerView.findViewHolderForLayoutPosition(lastVideoPosition);
+          recyclerView.findViewHolderForLayoutPosition(mLastVideoPosition);
       // Re-calculate the rectangles
       if (viewHolder != null) {
         recyclerView.getLocalVisibleRect(mParentRect);
@@ -75,19 +75,19 @@ public final class RecyclerViewLinearScrollListener extends RecyclerViewScrollLi
     int videoPosition = -1;
     if ((firstPosition != RecyclerView.NO_POSITION || lastPosition != RecyclerView.NO_POSITION)
         && firstPosition <= lastPosition) { // for sure
-      ToroPlayer video;
+      ToroPlayer player;
       for (int i = firstPosition; i <= lastPosition; i++) {
         // detected a view holder for video player
         RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(i);
         if (viewHolder != null && viewHolder instanceof ToroPlayer) {
-          video = (ToroPlayer) viewHolder;
+          player = (ToroPlayer) viewHolder;
           // Re-calculate the rectangles
           recyclerView.getLocalVisibleRect(mParentRect);
           viewHolder.itemView.getLocalVisibleRect(mChildRect);
           // check that view position
-          if (video.wantsToPlay(mParentRect, mChildRect)) {
-            if (!candidates.contains(video)) {
-              candidates.add(video);
+          if (player.wantsToPlay(mParentRect, mChildRect)) {
+            if (!candidates.contains(player)) {
+              candidates.add(player);
             }
           }
         }
@@ -95,27 +95,26 @@ public final class RecyclerViewLinearScrollListener extends RecyclerViewScrollLi
 
       if (Toro.getPolicy().requireCompletelyVisible()) {
         for (Iterator<ToroPlayer> iterator = candidates.iterator(); iterator.hasNext(); ) {
-          ToroPlayer player = iterator.next();
-          if (player.visibleAreaOffset() < 1.f) {
+          if (iterator.next().visibleAreaOffset() < 1.f) {
             iterator.remove();
           }
         }
       }
 
-      video = Toro.getPolicy().getPlayer(candidates);
+      player = Toro.getPolicy().getPlayer(candidates);
 
-      if (video == null) {
+      if (player == null) {
         return;
       }
 
-      for (ToroPlayer player : candidates) {
-        if (player == video) {
-          videoPosition = player.getPlayerPosition();
+      for (ToroPlayer candidate : candidates) {
+        if (candidate == player) {
+          videoPosition = candidate.getPositionInAdapter();
           break;
         }
       }
 
-      if (videoPosition == lastVideoPosition) {  // Nothing changes, keep going
+      if (videoPosition == mLastVideoPosition) {  // Nothing changes, keep going
         if (lastVideo != null && !lastVideo.isPlaying()) {
           mManager.startVideo(lastVideo);
         }
@@ -131,8 +130,8 @@ public final class RecyclerViewLinearScrollListener extends RecyclerViewScrollLi
       }
 
       // Switch video
-      lastVideo = video;
-      lastVideoPosition = videoPosition;
+      lastVideo = player;
+      mLastVideoPosition = videoPosition;
 
       mManager.setPlayer(lastVideo);
       mManager.restoreVideoState(lastVideo, lastVideo.getVideoId());

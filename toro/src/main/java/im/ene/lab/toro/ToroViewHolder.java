@@ -23,7 +23,7 @@ import android.view.View;
 /**
  * Created by eneim on 1/31/16.
  */
-abstract class ToroViewHolder extends BaseAdapter.ViewHolder
+abstract class ToroViewHolder extends RecyclerViewAdapter.ViewHolder
     implements ToroPlayer, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener,
     MediaPlayer.OnErrorListener, MediaPlayer.OnInfoListener, MediaPlayer.OnSeekCompleteListener {
 
@@ -62,7 +62,7 @@ abstract class ToroViewHolder extends BaseAdapter.ViewHolder
     Toro.onSeekComplete(this, mp);
   }
 
-  @Override public int getPlayerPosition() {
+  @Override public int getPositionInAdapter() {
     return getAdapterPosition();
   }
 }

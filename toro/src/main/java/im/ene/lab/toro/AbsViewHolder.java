@@ -16,17 +16,17 @@
 
 package im.ene.lab.toro;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 /**
- * Created by eneim on 1/30/16.
+ * Created by eneim on 2/1/16.
  */
-public interface OnItemClickListener {
+public abstract class AbsViewHolder {
 
-  /**
-   * @param itemId value from {@link RecyclerView.Adapter#getItemId(int)}
-   */
-  void onItemClick(RecyclerViewAdapter adapter, RecyclerViewAdapter.ViewHolder viewHolder, View view,
-      int adapterPosition, long itemId);
+  public final View itemView;
+
+  public AbsViewHolder(View itemView) {
+    this.itemView = itemView;
+  }
+
 }

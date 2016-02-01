@@ -19,8 +19,9 @@ package im.ene.lab.toro;
 /**
  * Created by eneim on 1/29/16.
  * <p/>
- * To force client to use child class of {@link im.ene.lab.toro.BaseAdapter.ViewHolder}
+ * To force client to use child class of {@link RecyclerViewAdapter.ViewHolder}
  */
-public abstract class ToroAdapter<VH extends BaseAdapter.ViewHolder> extends BaseAdapter<VH> {
+public abstract class ToroAdapter<VH extends RecyclerViewAdapter.ViewHolder> extends
+    RecyclerViewAdapter<VH> {
 
 }

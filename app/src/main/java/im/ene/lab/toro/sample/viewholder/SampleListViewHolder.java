@@ -23,15 +23,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
-import im.ene.lab.toro.TextureVideoViewHolder;
+import im.ene.lab.toro.AbsVideoViewHolder;
 import im.ene.lab.toro.sample.R;
 import im.ene.lab.toro.sample.data.SimpleVideoObject;
 import im.ene.lab.toro.widget.TextureVideoView;
 
 /**
- * Created by eneim on 1/30/16.
+ * Created by eneim on 2/1/16.
  */
-public class VideoViewHolder extends TextureVideoViewHolder implements Handler.Callback {
+public class SampleListViewHolder extends AbsVideoViewHolder implements Handler.Callback {
 
   private static final String TAG = "VideoViewHolder";
 
@@ -48,19 +48,26 @@ public class VideoViewHolder extends TextureVideoViewHolder implements Handler.C
   private Handler mHandler = new Handler(this);
   private boolean mIsVideoPathSet = false;
 
-  public VideoViewHolder(View itemView) {
+  private TextureVideoView mVideoView;
+  private SimpleVideoObject mItem;
+
+  public SampleListViewHolder(View itemView) {
     super(itemView);
+    mVideoView = (TextureVideoView) itemView.findViewById(R.id.video);
+
+    // mVideoView.setOnPreparedListener(this);
+    // mVideoView.setOnCompletionListener(this);
+    // mVideoView.setOnErrorListener(this);
+    // mVideoView.setOnInfoListener(this);
+    // mVideoView.setOnSeekCompleteListener(this);
   }
 
-  @Override protected TextureVideoView getVideoView(View itemView) {
-    return (TextureVideoView) itemView.findViewById(R.id.video);
-  }
-
-  @Override public void bind(Object item) {
+  public void bind(Object item) {
     if (!(item instanceof SimpleVideoObject)) {
       throw new IllegalStateException("Unexpected object: " + item.toString());
     }
 
+    mItem = (SimpleVideoObject) item;
     Log.d(TAG, "bind() called with: " + "item = [" + item + "]");
     // mCurrentState = State.STATE_IDLE;
     mIsVideoPathSet = false;
@@ -93,7 +100,7 @@ public class VideoViewHolder extends TextureVideoViewHolder implements Handler.C
   }
 
   @Nullable @Override public Long getVideoId() {
-    return (long) getAdapterPosition();
+    return (long) mItem.hashCode();
   }
 
   @Override public void onActivityPaused() {
