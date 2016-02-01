@@ -160,7 +160,7 @@ import java.util.WeakHashMap;
     } else if (view instanceof ToroListView) {
       // TODO implement for ListView
       synchronized (LOCK) {
-        ListViewScrollListener scrollListener = new ListViewScrollListener(new ToroManagerImpl());
+        AbsListViewScrollListener scrollListener = new AbsListViewScrollListener(new ToroManagerImpl());
         ((ToroListView) view).addOnScrollListener(scrollListener);
         sInstance.mEntries.put(view, scrollListener);
       }
@@ -192,8 +192,8 @@ import java.util.WeakHashMap;
         // there is a set of <View, Listener> is removed
         if (view instanceof RecyclerView && object instanceof RecyclerViewScrollListener) {
           ((RecyclerView) view).removeOnScrollListener((RecyclerView.OnScrollListener) object);
-        } else if (view instanceof ToroListView && object instanceof ListViewScrollListener) {
-          ((ToroListView) view).removeOnScrollListener((ListViewScrollListener) object);
+        } else if (view instanceof ToroListView && object instanceof AbsListViewScrollListener) {
+          ((ToroListView) view).removeOnScrollListener((AbsListViewScrollListener) object);
         }
       }
     }

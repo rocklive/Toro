@@ -6,7 +6,7 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.AbsListView;
 
-import im.ene.lab.toro.ListViewScrollListener;
+import im.ene.lab.toro.AbsListViewScrollListener;
 
 import java.util.ArrayList;
 
@@ -53,7 +53,7 @@ public abstract class ToroListView extends AbsListView {
       @Override public void onScrollStateChanged(AbsListView view, int scrollState) {
         l.onScrollStateChanged(view, scrollState);
         for (OnScrollListener listener : mListeners) {
-          if (listener instanceof ListViewScrollListener) {
+          if (listener instanceof AbsListViewScrollListener) {
             listener.onScrollStateChanged(view, scrollState);
           }
         }
@@ -64,7 +64,7 @@ public abstract class ToroListView extends AbsListView {
                            int totalItemCount) {
         l.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
         for (OnScrollListener listener : mListeners) {
-          if (listener instanceof ListViewScrollListener) {
+          if (listener instanceof AbsListViewScrollListener) {
             listener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
           }
         }

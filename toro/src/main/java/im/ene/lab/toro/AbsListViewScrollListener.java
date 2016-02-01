@@ -23,11 +23,11 @@ import android.widget.AbsListView;
  *
  * @hide
  */
-public class ListViewScrollListener implements AbsListView.OnScrollListener, ToroScrollHelper {
+public class AbsListViewScrollListener implements AbsListView.OnScrollListener, ToroScrollHelper {
 
   protected final ToroManager mManager;
 
-  public ListViewScrollListener(ToroManager manager) {
+  public AbsListViewScrollListener(ToroManager manager) {
     this.mManager = manager;
   }
 
