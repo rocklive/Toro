@@ -25,17 +25,19 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+import com.google.android.youtube.player.YouTubeThumbnailLoader;
+import com.google.android.youtube.player.YouTubeThumbnailView;
 import im.ene.lab.toro.ToroAdapter;
 import im.ene.lab.toro.ToroViewHolder;
 import im.ene.lab.toro.sample.BuildConfig;
@@ -78,6 +80,7 @@ public class MyYoutubeActivity extends AppCompatActivity {
   private static class Adapter extends ToroAdapter<ViewHolder> {
 
     private final FragmentManager mFragmentManager;
+    private YouTubePlayer mYoutubePlayer;
 
     public Adapter(FragmentManager fragmentManager) {
       this.mFragmentManager = fragmentManager;
@@ -99,34 +102,40 @@ public class MyYoutubeActivity extends AppCompatActivity {
     }
   }
 
-  static class ViewHolder extends ToroViewHolder implements YouTubePlayer.OnInitializedListener {
+  static class ViewHolder extends ToroViewHolder
+      implements YouTubeThumbnailView.OnInitializedListener,
+      YouTubePlayer.PlayerStateChangeListener, YouTubePlayer.PlaybackEventListener {
 
     private static final int LAYOUT_RES = R.layout.vh_youtube_video;
 
     private final Adapter mParent;
 
-    @Bind(R.id.title) TextView mTitle;
-    private ViewGroup mContainer;
+    @Bind(R.id.thumbnail) YouTubeThumbnailView mThumbnail;
+    @Bind(R.id.video_id) TextView mVideoId;
+    @Bind(R.id.info) TextView mInfo;
+    @Bind(R.id.container) FrameLayout mContainer;
     private int mVideoViewId;
     private SimpleVideoObject mItem;
     private YouTubePlayerSupportFragment mYoutubeFragment;
-    private YouTubePlayer mPlayer;
+    // private YouTubePlayer mPlayer;
+    private int seekPosition = 0;
+    private boolean isSeeking = false;
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     public ViewHolder(Adapter adapter, View itemView) {
       super(itemView);
-      mContainer = (ViewGroup) itemView;
-      mParent = adapter;
+      TAG = toString();
       ButterKnife.bind(this, itemView);
+      mParent = adapter;
       mVideoViewId = View.generateViewId();
     }
 
     @Override public boolean wantsToPlay() {
-      return mPlayer != null && super.visibleAreaOffset() >= 0.9;
+      return super.visibleAreaOffset() >= 0.8f;
     }
 
     @Override public boolean isAbleToPlay() {
-      return mPlayer != null;
+      return true;
     }
 
     @Nullable @Override public String getVideoId() {
@@ -138,34 +147,115 @@ public class MyYoutubeActivity extends AppCompatActivity {
       return view != null ? view : mContainer;
     }
 
+    @Override public void onAttachedToParent() {
+      super.onAttachedToParent();
+      if (mParent != null && mYoutubeFragment != null) {
+        mParent.mFragmentManager.beginTransaction().show(mYoutubeFragment).commit();
+      }
+    }
+
+    @Override public void onDetachedFromParent() {
+      super.onDetachedFromParent();
+      if (mParent != null && mYoutubeFragment != null) {
+        mParent.mFragmentManager.beginTransaction().hide(mYoutubeFragment).commit();
+      }
+    }
+
     @Override public void start() {
-      if (mPlayer != null) {
-        mPlayer.play();
+      if (mThumbnail != null) {
+        mThumbnail.setVisibility(View.INVISIBLE);
+      }
+
+      if (mParent.mYoutubePlayer != null) {
+        mParent.mYoutubePlayer.release();
+      }
+
+      if (mYoutubeFragment != null) {
+        mYoutubeFragment.initialize(BuildConfig.YOUTUBE_API_KEY,
+            new YouTubePlayer.OnInitializedListener() {
+              @Override public void onInitializationSuccess(YouTubePlayer.Provider provider,
+                  YouTubePlayer youTubePlayer, boolean b) {
+                mParent.mYoutubePlayer = youTubePlayer;
+                youTubePlayer.setPlayerStateChangeListener(ViewHolder.this);
+                youTubePlayer.setPlaybackEventListener(ViewHolder.this);
+                youTubePlayer.setPlayerStyle(YouTubePlayer.PlayerStyle.CHROMELESS);
+                if (!b) {
+                  if (isSeeking) {
+                    isSeeking = false;
+                    youTubePlayer.loadVideo(mItem.video, seekPosition);
+                  } else {
+                    youTubePlayer.loadVideo(mItem.video);
+                  }
+                }
+              }
+
+              @Override public void onInitializationFailure(YouTubePlayer.Provider provider,
+                  YouTubeInitializationResult youTubeInitializationResult) {
+
+              }
+            });
       }
     }
 
     @Override public void pause() {
-      if (mPlayer != null) {
-        mPlayer.pause();
+      if (mThumbnail != null) {
+        mThumbnail.setVisibility(View.VISIBLE);
+      }
+
+      if (mParent.mYoutubePlayer != null) {
+        try {
+          mParent.mYoutubePlayer.pause();
+        } catch (IllegalStateException er) {
+          er.printStackTrace();
+        }
       }
     }
 
     @Override public int getDuration() {
-      return mPlayer != null ? mPlayer.getDurationMillis() : -1;
-    }
-
-    @Override public int getCurrentPosition() {
-      return mPlayer != null ? mPlayer.getCurrentTimeMillis() : 0;
-    }
-
-    @Override public void seekTo(int pos) {
-      if (mPlayer != null) {
-        mPlayer.seekToMillis(pos);
+      try {
+        return mParent.mYoutubePlayer != null ? mParent.mYoutubePlayer.getDurationMillis() : -1;
+      } catch (IllegalStateException er) {
+        er.printStackTrace();
+        return -1;
       }
     }
 
+    @Override public void onPlaybackPaused() {
+      super.onPlaybackPaused();
+    }
+
+    @Override public void onPlaybackStopped() {
+      super.onPlaybackStopped();
+      if (mParent.mYoutubePlayer != null) {
+        try {
+          mParent.mYoutubePlayer.release();
+        } catch (IllegalStateException er) {
+          er.printStackTrace();
+        }
+      }
+    }
+
+    @Override public int getCurrentPosition() {
+      try {
+        return mParent.mYoutubePlayer != null ? mParent.mYoutubePlayer.getCurrentTimeMillis() : 0;
+      } catch (IllegalStateException er) {
+        er.printStackTrace();
+        return 0;
+      }
+    }
+
+    @Override public void seekTo(int pos) {
+      seekPosition = pos;
+      isSeeking = true;
+    }
+
     @Override public boolean isPlaying() {
-      return mPlayer != null && mPlayer.isPlaying();
+      try {
+        return mParent.mYoutubePlayer != null && mParent.mYoutubePlayer.isPlaying();
+      } catch (IllegalStateException er) {
+        er.printStackTrace();
+        return false;
+      }
     }
 
     @Override public void bind(@Nullable Object object) {
@@ -174,29 +264,18 @@ public class MyYoutubeActivity extends AppCompatActivity {
       }
 
       mItem = (SimpleVideoObject) object;
-      mTitle.setText(mItem.video);
+
+      mVideoId.setText(mItem.video);
 
       if ((mYoutubeFragment =
           (YouTubePlayerSupportFragment) mParent.mFragmentManager.findFragmentById(mVideoViewId))
           == null) {
         mYoutubeFragment = YouTubePlayerSupportFragment.newInstance();
+
+        View videoView = mContainer.getChildAt(0);
+        videoView.setId(mVideoViewId);
+
         // Create new youtube view holder
-        View videoView = mContainer.findViewById(mVideoViewId);
-        if (videoView == null) {
-          if (mContainer.getChildAt(1) != null) {
-            mContainer.removeViewAt(1);
-          }
-
-          videoView = new FrameLayout(mContainer.getContext());
-          LinearLayout.LayoutParams params =
-              new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                  ViewGroup.LayoutParams.WRAP_CONTENT);
-          videoView.setLayoutParams(params);
-          videoView.setMinimumHeight(Util.dpToPx(mContainer.getContext(), 120.f));
-          videoView.setId(mVideoViewId);
-          mContainer.addView(videoView);
-        }
-
         mParent.mFragmentManager.beginTransaction()
             .replace(mVideoViewId, mYoutubeFragment)
             .commit();
@@ -205,24 +284,90 @@ public class MyYoutubeActivity extends AppCompatActivity {
 
     @Override public void onViewHolderBound() {
       super.onViewHolderBound();
-      if (mYoutubeFragment != null) {
-        mYoutubeFragment.initialize(BuildConfig.YOUTUBE_API_KEY, this);
-      }
+      mInfo.setText("Bound");
+      mThumbnail.initialize(BuildConfig.YOUTUBE_API_KEY, this);
     }
 
-    @Override public void onInitializationSuccess(YouTubePlayer.Provider provider,
-        YouTubePlayer youTubePlayer, boolean wasRestore) {
-      mPlayer = youTubePlayer;
-      youTubePlayer.setPlayerStyle(YouTubePlayer.PlayerStyle.CHROMELESS);
-      if (!wasRestore) {
-        youTubePlayer.cueVideo(mItem.video);
-        youTubePlayer.pause();
-      }
+    @Override public void onPlaybackStarted() {
+      super.onPlaybackStarted();
+      mInfo.setText("Started");
     }
 
-    @Override public void onInitializationFailure(YouTubePlayer.Provider provider,
+    @Override public void onPlaybackProgress(int position, int duration) {
+      super.onPlaybackProgress(position, duration);
+      mInfo.setText(Util.timeStamp(position, duration));
+    }
+
+    @Override public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView,
+        YouTubeThumbnailLoader youTubeThumbnailLoader) {
+      youTubeThumbnailLoader.setVideo(mItem.video);
+    }
+
+    @Override public void onInitializationFailure(YouTubeThumbnailView youTubeThumbnailView,
         YouTubeInitializationResult youTubeInitializationResult) {
-      mPlayer = null;
+
+    }
+
+    private final String TAG;
+
+    @Override public void onLoading() {
+      Log.d(TAG, "onLoading() called with: " + "");
+    }
+
+    @Override public void onLoaded(String s) {
+      Log.d(TAG, "onLoaded() called with: " + "s = [" + s + "]");
+    }
+
+    @Override public void onAdStarted() {
+      if (mThumbnail != null) {
+        mThumbnail.setVisibility(View.INVISIBLE);
+      }
+    }
+
+    @Override public void onVideoStarted() {
+      if (mThumbnail != null) {
+        mThumbnail.setVisibility(View.INVISIBLE);
+      }
+    }
+
+    @Override public void onVideoEnded() {
+      if (mThumbnail != null) {
+        mThumbnail.setVisibility(View.VISIBLE);
+      }
+    }
+
+    @Override public void onError(YouTubePlayer.ErrorReason errorReason) {
+      if (mThumbnail != null) {
+        mThumbnail.setVisibility(View.VISIBLE);
+      }
+    }
+
+    @Override public void onPlaying() {
+
+    }
+
+    @Override public void onPaused() {
+      if (mThumbnail != null) {
+        mThumbnail.setVisibility(View.VISIBLE);
+      }
+    }
+
+    @Override public void onStopped() {
+      if (mThumbnail != null) {
+        mThumbnail.setVisibility(View.VISIBLE);
+      }
+    }
+
+    @Override public void onBuffering(boolean b) {
+
+    }
+
+    @Override public void onSeekTo(int i) {
+      Log.d(TAG, "onSeekTo() called with: " + "i = [" + i + "]");
+    }
+
+    @Override public String toString() {
+      return Integer.toHexString(hashCode()) + " position=" + getAdapterPosition();
     }
   }
 }

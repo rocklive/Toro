@@ -16,19 +16,72 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     >
 
-  <TextView
-      android:id="@+id/title"
+  <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_margin="@dimen/activity_horizontal_margin"
-      android:gravity="center_vertical"
-      android:singleLine="true"
-      android:textAppearance="@style/TextAppearance.AppCompat.Title"
-      />
+      android:orientation="vertical"
+      >
+
+    <TextView
+        android:id="@+id/video_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:paddingBottom="4dp"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp"
+        android:paddingTop="4dp"
+        android:singleLine="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        tools:text="Video number one"
+        />
+
+    <TextView
+        android:id="@+id/info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:background="#80000000"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:paddingBottom="4dp"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp"
+        android:paddingTop="4dp"
+        android:singleLine="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="@android:color/white"
+        tools:text="Ready"
+        />
+
+  </LinearLayout>
+
+  <FrameLayout
+      android:id="@+id/container"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="160dp"
+        />
+
+    <com.google.android.youtube.player.YouTubeThumbnailView
+        android:id="@+id/thumbnail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:minHeight="160dp"
+        android:scaleType="centerCrop"
+        />
+  </FrameLayout>
 
 </LinearLayout>

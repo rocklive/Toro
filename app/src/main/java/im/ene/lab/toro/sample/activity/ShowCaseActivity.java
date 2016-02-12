@@ -31,6 +31,7 @@ import im.ene.lab.toro.sample.fragment.MultiVideoComplicatedGridFragment;
 import im.ene.lab.toro.sample.fragment.MultiVideoStaggeredGridFragment;
 import im.ene.lab.toro.sample.fragment.SingleVideoSimpleListFragment;
 import im.ene.lab.toro.sample.fragment.ViewPagerFragment;
+import im.ene.lab.toro.sample.fragment.YoutubeVideosFragment;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -39,7 +40,7 @@ public class ShowCaseActivity extends AppCompatActivity {
   @StringDef({
       SingleVideoSimpleListFragment.TAG, MultiVideoStaggeredGridFragment.TAG,
       MultiVideoComplicatedGridFragment.TAG, DualVideoListFragment.TAG,
-      DeadlySimpleListFragment.TAG, ViewPagerFragment.TAG
+      DeadlySimpleListFragment.TAG, ViewPagerFragment.TAG, YoutubeVideosFragment.TAG
   }) @Retention(RetentionPolicy.SOURCE) public @interface ShowcaseName {
   }
 
@@ -84,6 +85,8 @@ public class ShowCaseActivity extends AppCompatActivity {
       return DeadlySimpleListFragment.newInstance();
     } else if (ViewPagerFragment.TAG.equals(name)) {
       return ViewPagerFragment.newInstance();
+    } else if (YoutubeVideosFragment.TAG.equals(name)) {
+      return YoutubeVideosFragment.newInstance();
     } else {
       return null;
     }
@@ -102,6 +105,8 @@ public class ShowCaseActivity extends AppCompatActivity {
       return R.string.fragment_deadly_simple_list;
     } else if (ViewPagerFragment.TAG.equals(name)) {
       return R.string.fragment_view_pager;
+    } else if (YoutubeVideosFragment.TAG.equals(name)) {
+      return R.string.fragment_youtube_playlist;
     } else {
       return R.string.app_name;
     }

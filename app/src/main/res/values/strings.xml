@@ -31,4 +31,8 @@
   <string name="fragment_view_pager">
     ViewPager
   </string>
+
+  <string name="fragment_youtube_playlist">
+    Youtube Playlist
+  </string>
 </resources>
