@@ -139,7 +139,7 @@ public class MyYoutubeActivity extends AppCompatActivity {
     }
 
     @Nullable @Override public String getVideoId() {
-      return mItem.video;
+      return mItem.video + " - " + getAdapterPosition();
     }
 
     @NonNull @Override public View getVideoView() {

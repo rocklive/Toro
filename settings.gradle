@@ -1,1 +1,1 @@
-include ':app', ':toro', ':youtube-example'
+include ':app', ':toro'
