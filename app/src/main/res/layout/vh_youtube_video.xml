@@ -15,10 +15,20 @@
   ~ limitations under the License.
   -->
 
-<resources>
-  <integer name="staggered_span_count">2</integer>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
 
-  <bool name="accept_long_press">false</bool>
+  <TextView
+      android:id="@+id/title"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/activity_horizontal_margin"
+      android:gravity="center_vertical"
+      android:singleLine="true"
+      android:textAppearance="@style/TextAppearance.AppCompat.Title"
+      />
 
-  <item name="yt_view_id" type="id"/>
-</resources>
+</LinearLayout>

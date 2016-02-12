@@ -10,6 +10,8 @@ android {
     targetSdkVersion 23
     versionCode 1
     versionName "1.0"
+    buildConfigField "String", "YOUTUBE_API_KEY", "\"${youtube_sample_api_key}\""
+
   }
   buildTypes {
     release {

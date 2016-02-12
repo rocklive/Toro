@@ -1,6 +1,7 @@
 <resources>
   <string name="app_name">Toro</string>
   <string name="activity_show_case">Toro Showcase</string>
+  <string name="activity_youtube">Toro Youtube Sample</string>
 
   <string name="sample">
     GitHub Wikis is a simple way to let others contribute content. Any GitHub user can create and

@@ -16,7 +16,10 @@
 
 package im.ene.lab.toro.sample.util;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.support.v4.util.TimeUtils;
+import android.util.TypedValue;
 
 /**
  * Created by eneim on 2/3/16.
@@ -30,5 +33,11 @@ public class Util {
     TimeUtils.formatDuration(duration, durationTime);
 
     return posTime + " / " + durationTime.toString();
+  }
+
+  public static int dpToPx(Context context, float dp) {
+    Resources res = context.getResources();
+    float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, res.getDisplayMetrics());
+    return (int) px;
   }
 }
