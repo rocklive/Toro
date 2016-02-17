@@ -14,25 +14,16 @@
  * limitations under the License.
  */
 
-package im.ene.lab.toro.sample;
+package im.ene.lab.torox;
 
 import android.app.Application;
-import im.ene.lab.toro.Youtoro;
+import android.test.ApplicationTestCase;
 
 /**
- * Created by eneim on 2/1/16.
+ * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
  */
-public class ToroSampleApp extends Application {
-
-  private static ToroSampleApp sApp;
-
-  @Override public void onCreate() {
-    super.onCreate();
-    Youtoro.init(this, BuildConfig.YOUTUBE_API_KEY);
-    sApp = this;
-  }
-
-  public static String packageName() {
-    return sApp.getPackageName();
+public class ApplicationTest extends ApplicationTestCase<Application> {
+  public ApplicationTest() {
+    super(Application.class);
   }
 }

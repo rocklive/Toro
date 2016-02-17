@@ -14,25 +14,19 @@
  * limitations under the License.
  */
 
-package im.ene.lab.toro.sample;
+package im.ene.lab.toro;
 
 import android.app.Application;
-import im.ene.lab.toro.Youtoro;
 
 /**
- * Created by eneim on 2/1/16.
+ * Created by eneim on 2/15/16.
  */
-public class ToroSampleApp extends Application {
+public final class Youtoro {
 
-  private static ToroSampleApp sApp;
+  static String sYoutubeApiKey;
 
-  @Override public void onCreate() {
-    super.onCreate();
-    Youtoro.init(this, BuildConfig.YOUTUBE_API_KEY);
-    sApp = this;
-  }
-
-  public static String packageName() {
-    return sApp.getPackageName();
+  public static void init(Application application, String key) {
+    Toro.init(application);
+    sYoutubeApiKey = key;
   }
 }

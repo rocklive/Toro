@@ -14,25 +14,17 @@
  * limitations under the License.
  */
 
-package im.ene.lab.toro.sample;
+package im.ene.lab.torox;
 
-import android.app.Application;
-import im.ene.lab.toro.Youtoro;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
- * Created by eneim on 2/1/16.
+ * To work on unit tests, switch the Test Artifact in the Build Variants view.
  */
-public class ToroSampleApp extends Application {
-
-  private static ToroSampleApp sApp;
-
-  @Override public void onCreate() {
-    super.onCreate();
-    Youtoro.init(this, BuildConfig.YOUTUBE_API_KEY);
-    sApp = this;
-  }
-
-  public static String packageName() {
-    return sApp.getPackageName();
+public class ExampleUnitTest {
+  @Test public void addition_isCorrect() throws Exception {
+    assertEquals(4, 2 + 2);
   }
 }
