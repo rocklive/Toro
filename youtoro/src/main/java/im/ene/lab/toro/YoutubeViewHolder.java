@@ -37,12 +37,12 @@ public abstract class YoutubeViewHolder extends ToroViewHolder
   /**
    * This setup will offer {@link YouTubePlayer.PlayerStyle#CHROMELESS} to youtube player
    */
-  protected static final int CHROMELESS = 0x01;
+  protected static final int CHROMELESS = 0b01;
 
   /**
    * This setup will offer {@link YouTubePlayer.PlayerStyle#MINIMAL} to youtube player
    */
-  protected static final int MINIMUM = 0x10;
+  protected static final int MINIMUM = 0b10;
 
   /**
    * Parent Adapter which holds some important controllers

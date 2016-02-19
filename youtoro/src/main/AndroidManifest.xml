@@ -14,6 +14,9 @@
   ~ limitations under the License.
   -->
 
-<resources>
-  <string name="app_name">Toro Extended</string>
-</resources>
+<manifest
+    package="im.ene.lab.youtoro">
+
+  <application/>
+
+</manifest>

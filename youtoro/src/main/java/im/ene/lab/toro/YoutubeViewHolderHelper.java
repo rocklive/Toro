@@ -26,13 +26,13 @@ import com.google.android.youtube.player.YouTubePlayer;
 /**
  * Created by eneim on 2/15/16.
  */
-public class YoutubeViewHolderHelper
+final class YoutubeViewHolderHelper
     implements VideoViewHolderHelper, YouTubePlayer.PlayerStateChangeListener,
     YouTubePlayer.PlaybackEventListener {
 
   private static final String TAG = "YoutubeViewHolderHelper";
 
-  public YoutubeViewHolderHelper() {
+  YoutubeViewHolderHelper() {
 
   }
 

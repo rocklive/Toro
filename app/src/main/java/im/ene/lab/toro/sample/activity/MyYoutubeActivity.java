@@ -37,14 +37,14 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubeThumbnailLoader;
 import com.google.android.youtube.player.YouTubeThumbnailView;
+import im.ene.lab.toro.YoutubeListAdapter;
+import im.ene.lab.toro.YoutubeViewHolder;
 import im.ene.lab.toro.sample.BuildConfig;
 import im.ene.lab.toro.sample.R;
 import im.ene.lab.toro.sample.data.SimpleVideoObject;
 import im.ene.lab.toro.sample.data.VideoSource;
 import im.ene.lab.toro.sample.fragment.RecyclerViewFragment;
 import im.ene.lab.toro.sample.util.Util;
-import im.ene.lab.toro.YoutubeListAdapter;
-import im.ene.lab.toro.YoutubeViewHolder;
 
 /**
  * Created by eneim on 2/12/16.
@@ -62,6 +62,8 @@ public class MyYoutubeActivity extends AppCompatActivity {
   }
 
   public static class YoutubeListFragment extends RecyclerViewFragment {
+
+    public static final String TAG = "YoutubeListFragment";
 
     public static YoutubeListFragment newInstance() {
       return new YoutubeListFragment();

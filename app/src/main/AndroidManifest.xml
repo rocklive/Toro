@@ -13,6 +13,11 @@
       android:supportsRtl="true"
       android:theme="@style/AppTheme">
     <activity android:name=".activity.HomeActivity">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
     </activity>
 
     <activity
@@ -25,12 +30,6 @@
         android:label="@string/activity_youtube"
         android:launchMode="singleTop"
         android:name=".activity.MyYoutubeActivity">
-
-      <intent-filter>
-        <action android:name="android.intent.action.MAIN"/>
-
-        <category android:name="android.intent.category.LAUNCHER"/>
-      </intent-filter>
     </activity>
   </application>
 
