@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package im.ene.lab.toro.sample.activity;
+package im.ene.lab.toro.sample.fragment;
 
 import android.annotation.TargetApi;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -43,39 +41,25 @@ import im.ene.lab.toro.sample.BuildConfig;
 import im.ene.lab.toro.sample.R;
 import im.ene.lab.toro.sample.data.SimpleVideoObject;
 import im.ene.lab.toro.sample.data.VideoSource;
-import im.ene.lab.toro.sample.fragment.RecyclerViewFragment;
 import im.ene.lab.toro.sample.util.Util;
 
 /**
- * Created by eneim on 2/12/16.
+ * Created by eneim on 2/20/16.
  */
-public class MyYoutubeActivity extends AppCompatActivity {
+public class YoutubeListFragment extends RecyclerViewFragment {
 
-  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
-    getLayoutInflater().setFactory(this);
-    super.onCreate(savedInstanceState);
-    if (getSupportFragmentManager().findFragmentById(android.R.id.content) == null) {
-      getSupportFragmentManager().beginTransaction()
-          .replace(android.R.id.content, YoutubeListFragment.newInstance())
-          .commit();
-    }
+  public static final String TAG = "YoutubeListFragment";
+
+  public static YoutubeListFragment newInstance() {
+    return new YoutubeListFragment();
   }
 
-  public static class YoutubeListFragment extends RecyclerViewFragment {
+  @NonNull @Override protected RecyclerView.LayoutManager getLayoutManager() {
+    return new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+  }
 
-    public static final String TAG = "YoutubeListFragment";
-
-    public static YoutubeListFragment newInstance() {
-      return new YoutubeListFragment();
-    }
-
-    @NonNull @Override protected RecyclerView.LayoutManager getLayoutManager() {
-      return new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-    }
-
-    @NonNull @Override protected RecyclerView.Adapter getAdapter() {
-      return new Adapter(getChildFragmentManager());
-    }
+  @NonNull @Override protected RecyclerView.Adapter getAdapter() {
+    return new Adapter(getChildFragmentManager());
   }
 
   private static class Adapter extends YoutubeListAdapter {
@@ -88,11 +72,10 @@ public class MyYoutubeActivity extends AppCompatActivity {
       return new SimpleVideoObject(VideoSource.YOUTUBES[position % VideoSource.YOUTUBES.length]);
     }
 
-    @Override
-    public MyYoutubeActivity.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @Override public YoutubeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
       View view = LayoutInflater.from(parent.getContext())
-          .inflate(MyYoutubeActivity.ViewHolder.LAYOUT_RES, parent, false);
-      return new MyYoutubeActivity.ViewHolder(this, view);
+          .inflate(YoutubeListFragment.ViewHolder.LAYOUT_RES, parent, false);
+      return new YoutubeListFragment.ViewHolder(this, view);
     }
 
     @Override public int getItemCount() {

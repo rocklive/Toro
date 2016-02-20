@@ -33,6 +33,7 @@ import im.ene.lab.toro.sample.fragment.MultiVideoComplicatedGridFragment;
 import im.ene.lab.toro.sample.fragment.MultiVideoStaggeredGridFragment;
 import im.ene.lab.toro.sample.fragment.SingleVideoSimpleListFragment;
 import im.ene.lab.toro.sample.fragment.ViewPagerFragment;
+import im.ene.lab.toro.sample.fragment.YoutubeListFragment;
 
 public class HomeActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
 
@@ -85,7 +86,7 @@ public class HomeActivity extends AppCompatActivity implements RadioGroup.OnChec
   }
 
   @OnClick(R.id.btn_youtube_playlist) void youtubePlaylist() {
-    startActivity(ShowCaseActivity.createIntent(this, MyYoutubeActivity.YoutubeListFragment.TAG));
+    startActivity(ShowCaseActivity.createIntent(this, YoutubeListFragment.TAG));
   }
 
   @Override public void onCheckedChanged(RadioGroup group, int checkedId) {

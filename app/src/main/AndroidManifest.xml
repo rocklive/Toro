@@ -26,11 +26,6 @@
         android:name=".activity.ShowCaseActivity"
         android:parentActivityName=".activity.HomeActivity"/>
 
-    <activity
-        android:label="@string/activity_youtube"
-        android:launchMode="singleTop"
-        android:name=".activity.MyYoutubeActivity">
-    </activity>
   </application>
 
 </manifest>
