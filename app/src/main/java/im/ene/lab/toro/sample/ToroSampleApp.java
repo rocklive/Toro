@@ -17,6 +17,7 @@
 package im.ene.lab.toro.sample;
 
 import android.app.Application;
+import im.ene.lab.toro.Toro;
 import im.ene.lab.toro.Youtoro;
 
 /**
@@ -28,7 +29,7 @@ public class ToroSampleApp extends Application {
 
   @Override public void onCreate() {
     super.onCreate();
-    Youtoro.init(this, BuildConfig.YOUTUBE_API_KEY);
+    Toro.init(this, new Youtoro(BuildConfig.YOUTUBE_API_KEY));
     sApp = this;
   }
 

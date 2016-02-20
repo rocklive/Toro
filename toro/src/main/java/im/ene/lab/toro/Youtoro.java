@@ -16,17 +16,22 @@
 
 package im.ene.lab.toro;
 
-import android.app.Application;
-
 /**
  * Created by eneim on 2/15/16.
+ *
+ * 設計方針
+ *
+ * 1. YoutubePlayer has different playback lifecycle with normal view.
+ *
+ * 2. Youtube Player API is SO ANNOYING
+ *
+ * 3. Fabric-style setup: Toro.init(MyApp.this, new Youtoro(YOUTUBE_KEY));
  */
 public final class Youtoro {
 
-  static String sYoutubeApiKey;
+  final String apiKey;
 
-  public static void init(Application application, String key) {
-    Toro.init(application);
-    sYoutubeApiKey = key;
+  public Youtoro(String apiKey) {
+    this.apiKey = apiKey;
   }
 }

@@ -22,19 +22,26 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by eneim on 2/15/16.
+ *
+ * A Custom Adapter which support Youtube playback on its children.
  */
 public abstract class YoutubeListAdapter extends ToroAdapter<YoutubeViewHolder>
     implements VideoPlayerManager, Handler.Callback {
 
+  /**
+   * To support {@link YouTubePlayerSupportFragment}
+   */
+  public final FragmentManager mFragmentManager;
   private final ConcurrentHashMap<String, Integer> mVideoStates = new ConcurrentHashMap<>();
   private final Handler mHandler = new Handler(Looper.getMainLooper(), this);
-
-  public final FragmentManager mFragmentManager;
+  private final int MESSAGE_PROGRESS = 4;
   YouTubePlayer mYoutubePlayer;
+  // Current player widget
   private YoutubeViewHolder mPlayer;
 
   public YoutubeListAdapter(FragmentManager fragmentManager) {
@@ -67,7 +74,9 @@ public abstract class YoutubeListAdapter extends ToroAdapter<YoutubeViewHolder>
   }
 
   @Override public void onUnregistered() {
-    mHandler.removeCallbacksAndMessages(null);
+    if (mHandler != null) {
+      mHandler.removeCallbacksAndMessages(null);
+    }
   }
 
   /**
@@ -121,36 +130,19 @@ public abstract class YoutubeListAdapter extends ToroAdapter<YoutubeViewHolder>
     }
 
     // See {@link android.media.MediaPlayer#seekTo(int)}
-    mHandler.removeMessages(MESSAGE_SEEK);
-    mHandler.sendMessageDelayed(mHandler.obtainMessage(MESSAGE_SEEK, position, 0), 100);
+    if (mPlayer != null) {
+      mPlayer.seekTo(position);
+    }
   }
-
-  private final int MESSAGE_START = 1;
-  private final int MESSAGE_PAUSE = 2;
-  private final int MESSAGE_STOP = 3;
-  private final int MESSAGE_PROGRESS = 4;
-  private final int MESSAGE_SEEK = 5;
 
   @Override public boolean handleMessage(Message msg) {
     switch (msg.what) {
-      case MESSAGE_START:
-        return true;
-      case MESSAGE_PAUSE:
-        return true;
-      case MESSAGE_STOP:
-        return true;
       case MESSAGE_PROGRESS:
         if (mPlayer != null) {
           mPlayer.onPlaybackProgress(mPlayer.getCurrentPosition(), mPlayer.getDuration());
         }
         mHandler.removeMessages(MESSAGE_PROGRESS);
         mHandler.sendEmptyMessageDelayed(MESSAGE_PROGRESS, 250);
-        return true;
-      case MESSAGE_SEEK:
-        if (mPlayer != null) {
-          int position = msg.arg1;
-          mPlayer.seekTo(position);
-        }
         return true;
       default:
         return false;

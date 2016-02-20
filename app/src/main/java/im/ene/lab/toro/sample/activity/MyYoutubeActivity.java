@@ -138,6 +138,7 @@ public class MyYoutubeActivity extends AppCompatActivity {
       if (mThumbnail != null) {
         mThumbnail.setVisibility(View.INVISIBLE);
       }
+      mInfo.setText("Started");
     }
 
     @Override public String getYoutubeVideoId() {
@@ -184,31 +185,7 @@ public class MyYoutubeActivity extends AppCompatActivity {
 
     @Override public void onLoaded(String s) {
       super.onLoaded(s);
-      Log.d(TAG, "onLoaded() called with: " + "s = [" + s + "]");
       mInfo.setText("Loaded");
-    }
-
-    @Override public void onAdStarted() {
-      super.onAdStarted();
-      if (mThumbnail != null) {
-        mThumbnail.setVisibility(View.INVISIBLE);
-      }
-    }
-
-    @Override public void onVideoStarted() {
-      super.onVideoStarted();
-      if (mThumbnail != null) {
-        mThumbnail.setVisibility(View.INVISIBLE);
-      }
-      mInfo.setText("Started");
-    }
-
-    @Override public void onVideoEnded() {
-      super.onVideoEnded();
-      if (mThumbnail != null) {
-        mThumbnail.setVisibility(View.VISIBLE);
-      }
-      mInfo.setText("Ended");
     }
 
     @Override public void onError(YouTubePlayer.ErrorReason errorReason) {

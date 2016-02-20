@@ -95,6 +95,24 @@ import java.util.concurrent.ConcurrentHashMap;
     }
   }
 
+  static volatile Youtoro sYoutoro;
+
+  /**
+   * With support for Youtube.
+   *
+   * @param application Application to support
+   * @param youtoro Youtube API Key setup object
+   */
+  public static void init(Application application, @NonNull Youtoro youtoro) {
+    init(application);
+    checkNotNull();
+    if (youtoro.apiKey == null) {
+      throw new NullPointerException("API Key must not be null");
+    }
+
+    sYoutoro = youtoro;
+  }
+
   /**
    * Carefully detach current Activity from Toro. Should be coupled with {@link
    * Toro#attach(Activity)}
