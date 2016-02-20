@@ -20,5 +20,4 @@
 
   <bool name="accept_long_press">false</bool>
 
-  <item name="yt_view_id" type="id"/>
 </resources>
