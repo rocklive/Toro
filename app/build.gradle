@@ -17,6 +17,10 @@ android {
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
+    debug {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
   }
 
   packagingOptions {
@@ -34,10 +38,8 @@ dependencies {
   compile 'com.android.support:appcompat-v7:23.1.1'
   compile 'com.android.support:design:23.1.1'
   compile 'com.android.support:cardview-v7:23.1.1'
-
-  compile project(':toro')
-  compile project(':youtoro')
-
+  compile project(path: ':toro', configuration: 'release')
+  compile project(path: ':youtoro', configuration: 'release')
   compile 'com.squareup.picasso:picasso:2.5.2'
   compile 'com.jakewharton:butterknife:7.0.1'
 }

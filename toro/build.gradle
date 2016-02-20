@@ -6,6 +6,8 @@ group = 'im.ene.lab'
 android {
   compileSdkVersion 23
   buildToolsVersion "23.0.2"
+  publishNonDefault true
+  defaultPublishConfig "release"
 
   defaultConfig {
     minSdkVersion 16
@@ -15,9 +17,10 @@ android {
   }
   buildTypes {
     release {
-      minifyEnabled false
+      minifyEnabled true
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
+
     debug {
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

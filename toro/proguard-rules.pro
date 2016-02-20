@@ -15,10 +15,24 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-dontwarn **
+-target 1.7
 -dontusemixedcaseclassnames
 -dontskipnonpubliclibraryclasses
+-dontpreverify
 -verbose
 
--dontpreverify
-# Don't need to obfuscate method name
--dontobfuscate
+-optimizations !code/simplification/arithmetic,!code/allocation/variable
+-keep class **
+-keepclassmembers class *{*;}
+-keepattributes *
+
+-assumenosideeffects class android.util.Log {
+    public static boolean isLoggable(java.lang.String, int);
+    public static int v(...);
+    public static int i(...);
+    public static int w(...);
+    public static int d(...);
+    public static int e(...);
+    public static int wtf(...);
+}
