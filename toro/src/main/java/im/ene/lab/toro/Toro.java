@@ -26,6 +26,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewParent;
 import java.util.Collections;
@@ -45,7 +46,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH) public final class Toro
     implements Application.ActivityLifecycleCallbacks {
 
-  private static final String TAG = "Toro";
+  private static final String TAG = "TOROLOG";
 
   private static final Object LOCK = new Object();
 
@@ -509,9 +510,25 @@ import java.util.concurrent.ConcurrentHashMap;
         Rect videoRect = new Rect();
         player.getVideoView().getGlobalVisibleRect(videoRect, new Point());
 
+        boolean playable = windowRect.contains(parentRect) && /* not intersects, CONTAINS */
+            (windowRect.contains(videoRect) || windowRect.intersect(videoRect)) &&
+            (parentRect.contains(videoRect) || parentRect.intersect(videoRect));
+
+        Log.d(TAG, "vid?:"
+            + player.getPlayOrder()
+            + " | "
+            + windowRect
+            + " | "
+            + parentRect
+            + " | "
+            + videoRect
+            + " | "
+            + playable
+            + " | "
+            + player.visibleAreaOffset());
+
         // Condition: window contains parent, and parent contains Video or parent intersects Video
-        return windowRect.contains(parentRect) && (parentRect.contains(videoRect)
-            || parentRect.intersect(videoRect));
+        return playable;
       }
     };
 
@@ -555,8 +572,9 @@ import java.util.concurrent.ConcurrentHashMap;
         player.getVideoView().getGlobalVisibleRect(videoRect, new Point());
 
         // Condition: window contains parent, and parent contains Video or parent intersects Video
-        return windowRect.contains(parentRect) && (parentRect.contains(videoRect)
-            || parentRect.intersect(videoRect));
+        return windowRect.contains(parentRect) && /* not intersects, CONTAINS */
+            (windowRect.contains(videoRect) || windowRect.intersect(videoRect)) &&
+            (parentRect.contains(videoRect) || parentRect.intersect(videoRect));
       }
     };
 
@@ -597,8 +615,9 @@ import java.util.concurrent.ConcurrentHashMap;
         player.getVideoView().getGlobalVisibleRect(videoRect, new Point());
 
         // Condition: window contains parent, and parent contains Video or parent intersects Video
-        return windowRect.contains(parentRect) && (parentRect.contains(videoRect)
-            || parentRect.intersect(videoRect));
+        return windowRect.contains(parentRect) && /* not intersects, CONTAINS */
+            (windowRect.contains(videoRect) || windowRect.intersect(videoRect)) &&
+            (parentRect.contains(videoRect) || parentRect.intersect(videoRect));
       }
     };
 
@@ -634,8 +653,9 @@ import java.util.concurrent.ConcurrentHashMap;
         player.getVideoView().getGlobalVisibleRect(videoRect, new Point());
 
         // Condition: window contains parent, and parent contains Video or parent intersects Video
-        return windowRect.contains(parentRect) && (parentRect.contains(videoRect)
-            || parentRect.intersect(videoRect));
+        return windowRect.contains(parentRect) && /* not intersects, CONTAINS */
+            (windowRect.contains(videoRect) || windowRect.intersect(videoRect)) &&
+            (parentRect.contains(videoRect) || parentRect.intersect(videoRect));
       }
     };
   }
