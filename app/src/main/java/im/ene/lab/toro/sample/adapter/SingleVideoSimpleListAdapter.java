@@ -18,6 +18,7 @@ package im.ene.lab.toro.sample.adapter;
 
 import android.support.annotation.Nullable;
 import im.ene.lab.toro.sample.data.SimpleObject;
+import im.ene.lab.toro.sample.data.SimpleVideoObject;
 
 /**
  * Created by eneim on 2/3/16.
@@ -33,5 +34,10 @@ public class SingleVideoSimpleListAdapter extends BaseSampleAdapter {
       return mVideos.get(0);
     }
     return new SimpleObject();
+  }
+
+  @Override public int getItemViewType(int position) {
+    Object item = getItem(position);
+    return item instanceof SimpleVideoObject ? VIEW_TYPE_VIDEO_MIXED : VIEW_TYPE_NO_VIDEO;
   }
 }

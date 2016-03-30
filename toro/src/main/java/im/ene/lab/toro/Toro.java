@@ -26,6 +26,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewParent;
 import java.util.Collections;
@@ -45,34 +46,44 @@ import java.util.concurrent.ConcurrentHashMap;
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH) public final class Toro
     implements Application.ActivityLifecycleCallbacks {
 
-  private static final String TAG = "Toro";
+  private static final String TAG = "TOROLOG";
 
   private static final Object LOCK = new Object();
 
+  static final float GOLDEN;
+
   /**
-   * Stop playback strategy
+   * Strategy to temporary stop playback
    */
-  private static final ToroStrategy REST = new ToroStrategy() {
-    @Override public String getDescription() {
-      return "Rest";
-    }
-
-    @Override public ToroPlayer findBestPlayer(List<ToroPlayer> candidates) {
-      return null;
-    }
-
-    @Override public boolean allowsToPlay(ToroPlayer player, ViewParent parent) {
-      return false;
-    }
-  };
-
-  // Singleton, GOD object
-  static volatile Toro sInstance;
+  private static final ToroStrategy REST;
 
   /**
    * Helper object, support RecyclerView's ViewHolder
    */
-  static VideoViewItemHelper RECYCLER_VIEW_HELPER = new RecyclerViewItemHelper();
+  static final VideoViewItemHelper RECYCLER_VIEW_HELPER;
+
+  static {
+    GOLDEN = ((float) Math.sqrt(5.f) - 1) / 2;
+
+    RECYCLER_VIEW_HELPER = new RecyclerViewItemHelper();
+
+    REST = new ToroStrategy() {
+      @Override public String getDescription() {
+        return "Rest";
+      }
+
+      @Override public ToroPlayer findBestPlayer(List<ToroPlayer> candidates) {
+        return null;
+      }
+
+      @Override public boolean allowsToPlay(ToroPlayer player, ViewParent parent) {
+        return false;
+      }
+    };
+  }
+
+  // Singleton, GOD object
+  static volatile Toro sInstance;
 
   private static ToroStrategy cachedStrategy;
 
@@ -497,21 +508,16 @@ import java.util.concurrent.ConcurrentHashMap;
       }
 
       @Override public boolean allowsToPlay(ToroPlayer player, ViewParent parent) {
-        Rect windowRect = new Rect();
-        Rect parentRect = new Rect();
-        if (parent instanceof View) {
-          // 1. Get Window's vision from parent
-          ((View) parent).getWindowVisibleDisplayFrame(windowRect);
-          // 2. Get parent's global rect
-          ((View) parent).getGlobalVisibleRect(parentRect, new Point());
-        }
-        // 3. Get player global rect
+        View view = ((ToroAdapter.ViewHolder) player).itemView;
+        Rect viewRect = new Rect(0, 0, view.getWidth(), view.getHeight());
+        boolean visible = parent.getChildVisibleRect(view, viewRect, null);
+
         Rect videoRect = new Rect();
         player.getVideoView().getGlobalVisibleRect(videoRect, new Point());
 
-        // Condition: window contains parent, and parent contains Video or parent intersects Video
-        return windowRect.contains(parentRect) && (parentRect.contains(videoRect)
-            || parentRect.intersect(videoRect));
+        Log.d(TAG, "allowsToPlay: " + viewRect + " | " + videoRect + " | " + visible);
+        // Condition: window contains itemView, and itemView contains Video or itemView intersects Video
+        return visible && (viewRect.contains(videoRect) || viewRect.intersect(videoRect));
       }
     };
 
@@ -542,21 +548,16 @@ import java.util.concurrent.ConcurrentHashMap;
       }
 
       @Override public boolean allowsToPlay(ToroPlayer player, ViewParent parent) {
-        Rect windowRect = new Rect();
-        Rect parentRect = new Rect();
-        if (parent instanceof View) {
-          // 1. Get Window's vision from parent
-          ((View) parent).getWindowVisibleDisplayFrame(windowRect);
-          // 2. Get parent's global rect
-          ((View) parent).getGlobalVisibleRect(parentRect, new Point());
-        }
-        // 3. Get player global rect
+        View view = ((ToroAdapter.ViewHolder) player).itemView;
+        Rect viewRect = new Rect(0, 0, view.getWidth(), view.getHeight());
+        boolean visible = parent.getChildVisibleRect(view, viewRect, null);
+
         Rect videoRect = new Rect();
         player.getVideoView().getGlobalVisibleRect(videoRect, new Point());
 
-        // Condition: window contains parent, and parent contains Video or parent intersects Video
-        return windowRect.contains(parentRect) && (parentRect.contains(videoRect)
-            || parentRect.intersect(videoRect));
+        Log.d(TAG, "allowsToPlay: " + viewRect + " | " + videoRect + " | " + visible);
+        // Condition: window contains itemView, and itemView contains Video or itemView intersects Video
+        return visible && (viewRect.contains(videoRect) || viewRect.intersect(videoRect));
       }
     };
 
@@ -584,21 +585,16 @@ import java.util.concurrent.ConcurrentHashMap;
       }
 
       @Override public boolean allowsToPlay(ToroPlayer player, ViewParent parent) {
-        Rect windowRect = new Rect();
-        Rect parentRect = new Rect();
-        if (parent instanceof View) {
-          // 1. Get Window's vision from parent
-          ((View) parent).getWindowVisibleDisplayFrame(windowRect);
-          // 2. Get parent's global rect
-          ((View) parent).getGlobalVisibleRect(parentRect, new Point());
-        }
-        // 3. Get player global rect
+        View view = ((ToroAdapter.ViewHolder) player).itemView;
+        Rect viewRect = new Rect(0, 0, view.getWidth(), view.getHeight());
+        boolean visible = parent.getChildVisibleRect(view, viewRect, null);
+
         Rect videoRect = new Rect();
         player.getVideoView().getGlobalVisibleRect(videoRect, new Point());
 
-        // Condition: window contains parent, and parent contains Video or parent intersects Video
-        return windowRect.contains(parentRect) && (parentRect.contains(videoRect)
-            || parentRect.intersect(videoRect));
+        Log.d(TAG, "allowsToPlay: " + viewRect + " | " + videoRect + " | " + visible);
+        // Condition: window contains itemView, and itemView contains Video or itemView intersects Video
+        return visible && (viewRect.contains(videoRect) || viewRect.intersect(videoRect));
       }
     };
 
@@ -621,21 +617,16 @@ import java.util.concurrent.ConcurrentHashMap;
       }
 
       @Override public boolean allowsToPlay(ToroPlayer player, ViewParent parent) {
-        Rect windowRect = new Rect();
-        Rect parentRect = new Rect();
-        if (parent instanceof View) {
-          // 1. Get Window's vision from parent
-          ((View) parent).getWindowVisibleDisplayFrame(windowRect);
-          // 2. Get parent's global rect
-          ((View) parent).getGlobalVisibleRect(parentRect, new Point());
-        }
-        // 3. Get player global rect
+        View view = ((ToroAdapter.ViewHolder) player).itemView;
+        Rect viewRect = new Rect(0, 0, view.getWidth(), view.getHeight());
+        boolean visible = parent.getChildVisibleRect(view, viewRect, null);
+
         Rect videoRect = new Rect();
         player.getVideoView().getGlobalVisibleRect(videoRect, new Point());
 
-        // Condition: window contains parent, and parent contains Video or parent intersects Video
-        return windowRect.contains(parentRect) && (parentRect.contains(videoRect)
-            || parentRect.intersect(videoRect));
+        Log.d(TAG, "allowsToPlay: " + viewRect + " | " + videoRect + " | " + visible);
+        // Condition: window contains itemView, and itemView contains Video or itemView intersects Video
+        return visible && (viewRect.contains(videoRect) || viewRect.intersect(videoRect));
       }
     };
   }

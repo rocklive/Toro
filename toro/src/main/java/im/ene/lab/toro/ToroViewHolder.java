@@ -232,6 +232,11 @@ public abstract class ToroViewHolder extends ToroAdapter.ViewHolder implements T
     return 0;
   }
 
+  // Set magic number by default. Override this for expected behavior
+  @Override public boolean wantsToPlay() {
+    return visibleAreaOffset() >= /* Toro.GOLDEN */ 0.75;
+  }
+
   /**
    * Indicate that this Player is able to replay right after it stops (loop-able) or not.
    *

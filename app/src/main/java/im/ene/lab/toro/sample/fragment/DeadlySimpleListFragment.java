@@ -136,9 +136,10 @@ public class DeadlySimpleListFragment extends Fragment {
       mThumbnail.setVisibility(View.INVISIBLE);
     }
 
-    @Override public boolean wantsToPlay() {
-      return visibleAreaOffset() >= 0.85;
-    }
+    // NOTE: User default
+    //@Override public boolean wantsToPlay() {
+    //  return visibleAreaOffset() >= 0.85;
+    //}
 
     @Override public boolean isAbleToPlay() {
       return mPlayable;

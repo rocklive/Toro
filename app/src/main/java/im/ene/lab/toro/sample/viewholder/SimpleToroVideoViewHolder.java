@@ -69,9 +69,10 @@ public class SimpleToroVideoViewHolder extends ToroVideoViewHolder {
     mVideoView.setVideoURI(Uri.parse(mItem.video));
   }
 
-  @Override public boolean wantsToPlay() {
-    return visibleAreaOffset() >= 0.75;
-  }
+  // User default
+  //@Override public boolean wantsToPlay() {
+  //  return visibleAreaOffset() >= 0.85;
+  //}
 
   @Nullable @Override public String getVideoId() {
     return "TEST: " + getAdapterPosition();

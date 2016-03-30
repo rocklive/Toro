@@ -106,11 +106,6 @@ public abstract class ToroVideoViewHolder extends ToroViewHolder {
     return 0;
   }
 
-  @Override public boolean wantsToPlay() {
-    // Default implementation
-    return visibleAreaOffset() >= 0.75;
-  }
-
   @Override public boolean isAbleToPlay() {
     return mPlayable;
   }
