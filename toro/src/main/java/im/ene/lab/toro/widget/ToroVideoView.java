@@ -156,6 +156,7 @@ import java.util.Map;
   private boolean mCanPause;
   private boolean mCanSeekBack;
   private boolean mCanSeekForward;
+  private boolean isMuted;
   MediaPlayer.OnPreparedListener mPreparedListener = new MediaPlayer.OnPreparedListener() {
     public void onPrepared(MediaPlayer mp) {
       mCurrentState = STATE_PREPARED;
@@ -701,6 +702,30 @@ import java.util.Map;
     }
     mMediaController = controller;
     attachMediaController();
+  }
+
+  public void toggleAudio(){
+    if (mMediaPlayer != null) {
+      if (isMuted) {
+        unmuteAudio();
+      } else {
+        muteAudio();
+      }
+    }
+  }
+
+  private void muteAudio(){
+    mMediaPlayer.setVolume(0,0);
+    isMuted = true;
+  }
+
+  private void unmuteAudio(){
+    mMediaPlayer.setVolume(1, 1);
+    isMuted = false;
+  }
+
+  public boolean isMuted() {
+    return isMuted;
   }
 
   /**
