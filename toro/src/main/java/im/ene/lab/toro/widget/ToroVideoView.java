@@ -637,6 +637,7 @@ import java.util.Map;
       mMediaPlayer.setSurface(mSurface);
       mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
       mMediaPlayer.setScreenOnWhilePlaying(true);
+      muteAudio();
       mMediaPlayer.prepareAsync();
 
       // we don't set the target state here either, but preserve the
