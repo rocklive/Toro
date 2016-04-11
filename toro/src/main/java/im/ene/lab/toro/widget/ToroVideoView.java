@@ -156,7 +156,7 @@ import java.util.Map;
   private boolean mCanPause;
   private boolean mCanSeekBack;
   private boolean mCanSeekForward;
-  private boolean isMuted;
+  private boolean isMuted = true;
   MediaPlayer.OnPreparedListener mPreparedListener = new MediaPlayer.OnPreparedListener() {
     public void onPrepared(MediaPlayer mp) {
       mCurrentState = STATE_PREPARED;
@@ -716,7 +716,7 @@ import java.util.Map;
   }
 
   private void muteAudio(){
-    mMediaPlayer.setVolume(0,0);
+    mMediaPlayer.setVolume(0, 0);
     isMuted = true;
   }
 
@@ -781,6 +781,7 @@ import java.util.Map;
   }
 
   public void suspend() {
+    Log.d(TAG, "DMSO | suspend");
     release(false);
   }
 
