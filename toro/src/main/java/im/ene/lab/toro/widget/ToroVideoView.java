@@ -781,7 +781,6 @@ import java.util.Map;
   }
 
   public void suspend() {
-    Log.d(TAG, "DMSO | suspend");
     release(false);
   }
 
