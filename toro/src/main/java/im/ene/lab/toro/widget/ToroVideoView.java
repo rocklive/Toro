@@ -637,7 +637,11 @@ import java.util.Map;
       mMediaPlayer.setSurface(mSurface);
       mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
       mMediaPlayer.setScreenOnWhilePlaying(true);
-      muteAudio();
+      if (isMuted) {
+        muteAudio();
+      } else {
+        unmuteAudio();
+      }
       mMediaPlayer.prepareAsync();
 
       // we don't set the target state here either, but preserve the
@@ -673,6 +677,7 @@ import java.util.Map;
       }
       AudioManager am = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
       am.abandonAudioFocus(null);
+      isMuted = true;
     }
   }
 
@@ -713,16 +718,15 @@ import java.util.Map;
         muteAudio();
       }
     }
+    isMuted = !isMuted;
   }
 
   private void muteAudio(){
     mMediaPlayer.setVolume(0, 0);
-    isMuted = true;
   }
 
   private void unmuteAudio(){
     mMediaPlayer.setVolume(1, 1);
-    isMuted = false;
   }
 
   public boolean isMuted() {
