@@ -179,7 +179,7 @@ public abstract class ToroViewHolder extends ToroAdapter.ViewHolder implements T
     Rect videoRect = getVideoRect();
     Rect parentRect = getRecyclerViewRect();
 
-    if (parentRect != null && (parentRect.contains(videoRect) || parentRect.intersect(videoRect))) {
+    if (videoRect != null && parentRect != null && (parentRect.contains(videoRect) || parentRect.intersect(videoRect))) {
       float visibleArea = videoRect.height() * videoRect.width();
       float viewArea = getVideoView().getWidth() * getVideoView().getHeight();
       return viewArea <= 0.f ? 1.f : visibleArea / viewArea;
@@ -188,12 +188,12 @@ public abstract class ToroViewHolder extends ToroAdapter.ViewHolder implements T
     }
   }
 
-  protected final Rect getVideoRect() {
+  @Nullable protected final Rect getVideoRect() {
     Rect rect = new Rect();
     Point offset = new Point();
-    getVideoView().getGlobalVisibleRect(rect, offset);
+    boolean isVisible = getVideoView().getGlobalVisibleRect(rect, offset);
     Log.i(TAG, "VideoView Rect: " + getVideoId() + " | " + offset + " | " + rect);
-    return rect;
+    return isVisible ? rect : null;
   }
 
   @Nullable protected final Rect getRecyclerViewRect() {
@@ -203,9 +203,9 @@ public abstract class ToroViewHolder extends ToroAdapter.ViewHolder implements T
 
     Rect rect = new Rect();
     Point offset = new Point();
-    ((View) itemView.getParent()).getGlobalVisibleRect(rect, offset);
+    boolean isVisible = ((View) itemView.getParent()).getGlobalVisibleRect(rect, offset);
     Log.e(TAG, "Parent    Rect: " + getVideoId() + " | " + offset + " | " + rect);
-    return rect;
+    return isVisible ? rect : null;
   }
 
   @Override public void onVideoPrepared(MediaPlayer mp) {
