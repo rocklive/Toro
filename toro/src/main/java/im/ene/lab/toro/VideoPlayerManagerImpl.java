@@ -41,7 +41,7 @@ final class VideoPlayerManagerImpl implements VideoPlayerManager {
     @Override public boolean handleMessage(Message msg) {
       switch (msg.what) {
         case MESSAGE_PLAYBACK_PROGRESS:
-          if (mPlayer != null) {
+          if (mPlayer != null && mPlayer.isPlaying()) {
             mPlayer.onPlaybackProgress(mPlayer.getCurrentPosition(), mPlayer.getDuration());
           }
           mUiHandler.removeMessages(MESSAGE_PLAYBACK_PROGRESS);
