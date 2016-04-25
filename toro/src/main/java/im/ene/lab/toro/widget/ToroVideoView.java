@@ -486,6 +486,8 @@ import java.util.Map;
     if (isInPlaybackState()) {
       mMediaPlayer.start();
       mCurrentState = STATE_PLAYING;
+    } else {
+      openVideo();
     }
     mTargetState = STATE_PLAYING;
   }

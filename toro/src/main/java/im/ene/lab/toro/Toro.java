@@ -391,6 +391,9 @@ import java.util.concurrent.ConcurrentHashMap;
   }
 
   @Override public void onActivityResumed(Activity activity) {
+    if (!(activity instanceof ToroContainerActivity)) {
+      return;
+    }
     for (Map.Entry<Integer, ToroScrollListener> entry : mListeners.entrySet()) {
       ToroScrollListener listener = entry.getValue();
       State state = mStates.get(entry.getKey());
@@ -411,6 +414,9 @@ import java.util.concurrent.ConcurrentHashMap;
   }
 
   @Override public void onActivityPaused(Activity activity) {
+    if (!(activity instanceof ToroContainerActivity)) {
+      return;
+    }
     for (Map.Entry<Integer, ToroScrollListener> entry : mListeners.entrySet()) {
       ToroScrollListener listener = entry.getValue();
       State state = mStates.get(entry.getKey());
@@ -446,6 +452,9 @@ import java.util.concurrent.ConcurrentHashMap;
   }
 
   @Override public void onActivityDestroyed(Activity activity) {
+    if (!(activity instanceof ToroContainerActivity)) {
+      return;
+    }
     if (mStates != null) {
       for (State state : mStates.values()) {
         if (state.player != null) {
