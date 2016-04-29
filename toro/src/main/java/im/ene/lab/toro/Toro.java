@@ -109,10 +109,11 @@ import java.util.concurrent.ConcurrentHashMap;
         sInstance = new Toro();
       }
     }
-
+    /*
     if (application != null) {
       application.registerActivityLifecycleCallbacks(sInstance);
     }
+    */
   }
 
   /**
@@ -121,11 +122,12 @@ import java.util.concurrent.ConcurrentHashMap;
    */
   public static void detach(Activity activity) {
     checkNotNull();
+    /*
     Application application = activity.getApplication();
     if (application != null) {
       application.unregisterActivityLifecycleCallbacks(sInstance);
     }
-
+    */
     if (sInstance.mStates != null) {
       sInstance.mStates.clear();
     }
