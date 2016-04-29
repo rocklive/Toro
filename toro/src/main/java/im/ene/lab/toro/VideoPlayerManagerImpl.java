@@ -112,9 +112,18 @@ final class VideoPlayerManagerImpl implements VideoPlayerManager {
 
   @Override public void onRegistered() {
     mUiHandler = new Handler(Looper.getMainLooper(), mCallback);
+    if (mPlayer != null) {
+      startPlayback();
+      mPlayer.onPlaybackStarted();
+    }
   }
 
   @Override public void onUnregistered() {
+    if (mPlayer != null) {
+      pausePlayback();
+      mPlayer.seekTo(0);
+      mPlayer.onPlaybackPaused();
+    }
     mUiHandler.removeCallbacksAndMessages(null);
     mUiHandler = null;
   }
