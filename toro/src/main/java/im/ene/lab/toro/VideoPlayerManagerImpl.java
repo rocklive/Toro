@@ -20,8 +20,12 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.view.View;
+
 import java.util.HashMap;
 import java.util.Map;
+
+import im.ene.lab.toro.widget.ToroVideoView;
 
 /**
  * Created by eneim on 1/31/16.
@@ -122,6 +126,10 @@ final class VideoPlayerManagerImpl implements VideoPlayerManager {
     if (mPlayer != null) {
       pausePlayback();
       mPlayer.seekTo(0);
+      View videoView = mPlayer.getVideoView();
+      if (videoView != null && videoView instanceof ToroVideoView) {
+        ((ToroVideoView) videoView).resetMute();
+      }
       mPlayer.onPlaybackPaused();
     }
     mUiHandler.removeCallbacksAndMessages(null);

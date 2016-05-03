@@ -679,8 +679,13 @@ import java.util.Map;
       }
       AudioManager am = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
       am.abandonAudioFocus(null);
-      isMuted = true;
+      resetMute();
     }
+  }
+
+  public void resetMute() {
+    muteAudio();
+    isMuted = true;
   }
 
   private void attachMediaController() {
@@ -724,11 +729,15 @@ import java.util.Map;
   }
 
   private void muteAudio(){
-    mMediaPlayer.setVolume(0, 0);
+    if (mMediaPlayer != null) {
+      mMediaPlayer.setVolume(0, 0);
+    }
   }
 
   private void unmuteAudio(){
-    mMediaPlayer.setVolume(1, 1);
+    if (mMediaPlayer != null) {
+      mMediaPlayer.setVolume(1, 1);
+    }
   }
 
   public boolean isMuted() {
