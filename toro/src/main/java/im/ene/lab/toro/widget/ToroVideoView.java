@@ -504,6 +504,7 @@ import java.util.Map;
     if (isInPlaybackState()) {
       if (mMediaPlayer.isPlaying()) {
         mMediaPlayer.pause();
+        resetMute();
         mCurrentState = STATE_PAUSED;
       }
     }

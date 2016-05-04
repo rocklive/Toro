@@ -126,10 +126,6 @@ final class VideoPlayerManagerImpl implements VideoPlayerManager {
     if (mPlayer != null) {
       pausePlayback();
       mPlayer.seekTo(0);
-      View videoView = mPlayer.getVideoView();
-      if (videoView != null && videoView instanceof ToroVideoView) {
-        ((ToroVideoView) videoView).resetMute();
-      }
       mPlayer.onPlaybackPaused();
     }
     mUiHandler.removeCallbacksAndMessages(null);
