@@ -26,6 +26,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewParent;
 import java.util.Collections;
@@ -165,6 +166,7 @@ import java.util.concurrent.ConcurrentHashMap;
    * @param view which will be registered
    */
   public static void register(RecyclerView view) {
+    Log.d(TAG, "registering view " + toString(view));
     checkNotNull();
     if (view == null) {
       throw new NullPointerException("Registering View must not be null");
@@ -195,6 +197,7 @@ import java.util.concurrent.ConcurrentHashMap;
     // Cache
     sInstance.mViews.put(view.hashCode(), view);
     sInstance.mListeners.put(view.hashCode(), listener);
+    Log.d(TAG, "added scroll listener to view " + toString(view));
 
     final State state;
     if (sInstance.mStates.containsKey(view.hashCode())) {
@@ -214,12 +217,23 @@ import java.util.concurrent.ConcurrentHashMap;
     playerManager.onRegistered();
   }
 
+  private static String toString(RecyclerView view) {
+    View v = view;
+    try {
+      v = (View) view.getParent().getParent();
+    } catch (Exception e) {
+      // do nothing
+    }
+    return v.getClass().getSimpleName() + "#" + v.hashCode();
+  }
+
   /**
    * Unregister a registered View
    *
    * @param view which will be unregistered
    */
   public static void unregister(RecyclerView view) {
+    Log.d(TAG, "unregistering view " + toString(view));
     checkNotNull();
     if (view == null) {
       throw new NullPointerException("Un-registering View must not be null");
@@ -250,6 +264,7 @@ import java.util.concurrent.ConcurrentHashMap;
       }
       // Remove from cache
       sInstance.mViews.remove(view.hashCode());
+      Log.d(TAG, "removed scroll listener from view " + toString(view));
     }
   }
 

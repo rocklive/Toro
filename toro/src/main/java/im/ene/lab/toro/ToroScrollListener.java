@@ -20,6 +20,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,6 +33,7 @@ import java.util.List;
  */
 final class ToroScrollListener extends RecyclerView.OnScrollListener {
 
+  private static final String TAG = ToroScrollListener.class.getSimpleName();
   @NonNull private final VideoPlayerManager mManager;
 
   ToroScrollListener(@NonNull VideoPlayerManager manager) {
@@ -113,10 +116,12 @@ final class ToroScrollListener extends RecyclerView.OnScrollListener {
 
     // Ask strategy to elect one
     final ToroPlayer electedPlayer = Toro.getStrategy().findBestPlayer(candidates);
+    Log.d(TAG, "active player is " + toString(electedPlayer));
 
     if (electedPlayer == currentVideo) {
       // No thing changes, no new President.
       if (currentVideo != null && !currentVideo.isPlaying()) {
+        Log.d(TAG, "starting current player" + toString(electedPlayer));
         mManager.restoreVideoState(currentVideo.getVideoId());
         mManager.startPlayback();
         currentVideo.onPlaybackStarted();
@@ -126,6 +131,7 @@ final class ToroScrollListener extends RecyclerView.OnScrollListener {
 
     // Current player is not elected anymore, stop it.
     if (currentVideo != null) {
+      Log.d(TAG, "stopping current player" + toString(electedPlayer));
       mManager.saveVideoState(currentVideo.getVideoId(), currentVideo.getCurrentPosition(),
           currentVideo.getDuration());
       mManager.pausePlayback();
@@ -138,9 +144,14 @@ final class ToroScrollListener extends RecyclerView.OnScrollListener {
     }
 
     // New president!
+    Log.d(TAG, "starting new active player " + toString(electedPlayer));
     mManager.setPlayer(electedPlayer);
     mManager.restoreVideoState(electedPlayer.getVideoId());
     mManager.startPlayback();
     electedPlayer.onPlaybackStarted();
+  }
+
+  private String toString(ToroPlayer player) {
+    return player == null ? "null" : player.getClass().getSimpleName() + "#" + player.hashCode();
   }
 }

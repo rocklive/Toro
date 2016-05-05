@@ -39,6 +39,8 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.MediaController;
 import android.widget.MediaController.MediaPlayerControl;
 import im.ene.lab.toro.R;
+
+import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.Map;
 
@@ -75,9 +77,9 @@ import java.util.Map;
   private static final int STATE_PLAYING = 3;
   private static final int STATE_PAUSED = 4;
   private static final int STATE_PLAYBACK_COMPLETED = 5;
-  private String TAG = "TextureVideoView";
+  private final String TAG = getClass().getSimpleName() + "#" + hashCode();
   // settable by the client
-  private Uri mUri;
+  private FileDescriptor mFileDescriptor;
   private Map<String, String> mHeaders;
   // mCurrentState is a TextureVideoView object's current state.
   // mTargetState is the state that a method caller intends to reach.
@@ -571,37 +573,9 @@ import java.util.Map;
     return getDefaultSize(desiredSize, measureSpec);
   }
 
-  /**
-   * Sets video path.
-   *
-   * @param path the path of the video.
-   */
-  public void setVideoPath(String path) {
-    setVideoURI(Uri.parse(path));
-  }
-
-  /**
-   * Sets video URI.
-   *
-   * @param uri the URI of the video.
-   */
-  public void setVideoURI(Uri uri) {
-    setVideoURI(uri, null);
-  }
-
-  /**
-   * Sets video URI using specific headers.
-   *
-   * @param uri the URI of the video.
-   * @param headers the headers for the URI request.
-   * Note that the cross domain redirection is allowed by default, but that can be
-   * changed with key/value pairs through the headers parameter with
-   * "android-allow-cross-domain-redirect" as the key and "0" or "1" as the value
-   * to disallow or allow cross domain redirection.
-   */
-  public void setVideoURI(Uri uri, Map<String, String> headers) {
-    mUri = uri;
-    mHeaders = headers;
+  public void setVideoFileDescriptor(FileDescriptor fd) {
+    mFileDescriptor = fd;
+    mHeaders = null;
     mSeekWhenPrepared = 0;
     openVideo();
     requestLayout();
@@ -609,7 +583,7 @@ import java.util.Map;
   }
 
   private void openVideo() {
-    if (mUri == null || mSurface == null) {
+    if (mFileDescriptor == null || !mFileDescriptor.valid() || mSurface == null) {
       // not ready for playback just yet, will try again later
       return;
     }
@@ -636,7 +610,7 @@ import java.util.Map;
       mMediaPlayer.setOnInfoListener(mInfoListener);
       mMediaPlayer.setOnBufferingUpdateListener(mBufferingUpdateListener);
       mCurrentBufferPercentage = 0;
-      mMediaPlayer.setDataSource(getContext().getApplicationContext(), mUri, mHeaders);
+      mMediaPlayer.setDataSource(mFileDescriptor);
       mMediaPlayer.setSurface(mSurface);
       mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
       mMediaPlayer.setScreenOnWhilePlaying(true);
@@ -652,13 +626,13 @@ import java.util.Map;
       mCurrentState = STATE_PREPARING;
       attachMediaController();
     } catch (IOException ex) {
-      Log.w(TAG, "Unable to open content: " + mUri, ex);
+      Log.w(TAG, "Unable to open content", ex);
       mCurrentState = STATE_ERROR;
       mTargetState = STATE_ERROR;
       mErrorListener.onError(mMediaPlayer, MediaPlayer.MEDIA_ERROR_UNKNOWN, 0);
       return;
     } catch (IllegalArgumentException ex) {
-      Log.w(TAG, "Unable to open content: " + mUri, ex);
+      Log.w(TAG, "Unable to open content", ex);
       mCurrentState = STATE_ERROR;
       mTargetState = STATE_ERROR;
       mErrorListener.onError(mMediaPlayer, MediaPlayer.MEDIA_ERROR_UNKNOWN, 0);
